@@ -40,9 +40,7 @@ let store = new Proxy(
 );
 
 const reqIdCounter = createCounter();
-/**
- * 添加额外处理的close方法
- */
+
 const workerRequest = createAsyncCaller((paths, args) => {
   if (!worker) {
     worker = new Worker(workerUrl, {
@@ -110,7 +108,6 @@ const uniqueService = new UniqueService({
   },
 });
 
-// 获取actions元素
 const startServiceElement = document.getElementById("startService");
 const closeServiceElement = document.getElementById("closeService");
 const trafficSignalElemnt = document.getElementById("traffic_signal");
@@ -144,7 +141,6 @@ function renderSql() {
   sqlEditorElement.innerText = sqlText;
 }
 
-// 添加事件监听器
 startServiceElement.addEventListener("click", () => {
   uniqueService.claimOwnership();
 });

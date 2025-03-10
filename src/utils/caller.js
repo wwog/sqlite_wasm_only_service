@@ -1,39 +1,36 @@
 import { LRUMap } from "./lruCache";
 
-// 创建模块级别的WeakMap，用于存储每个callback对应的缓存
+// create a module-level WeakMap to store the cache for each callback
 const callbackProxyCache = new WeakMap();
-const MAX_CACHE_SIZE = 200; // 设置默认最大缓存数量
+const MAX_CACHE_SIZE = 200;
 
 /**
- * 创建一个异步调用代理，支持链式调用和路径追踪
+ * Create an asynchronous call proxy that supports chained calls and path tracking
  * @template T
- * @param {function(paths:string[], args:any[]): Promise<T>} callback - 处理异步调用的回调函数
- * @param {number} [maxCacheSize=MAX_CACHE_SIZE] - 每个callback的最大缓存数量
- * @returns {ProxyHandler<Function>} 返回一个代理处理器，可以通过链式调用收集路径
+ * @param {function(paths:string[], args:any[]): Promise<T>} callback - handle function
+ * @param {number} [maxCacheSize=MAX_CACHE_SIZE] - every call will be cached, if the cache size exceeds this value, the oldest one will be removed
+ * @returns {ProxyHandler<Function>} - ProxyHandler
  *
  * @example
- * // 基本使用
  * const api = createAsyncCaller(async (paths, args) => {
- *   console.log('调用路径:', paths);
- *   console.log('参数:', args);
+ *   console.log('paths:', paths);
+ *   console.log('args:', args);
  *   return 'result';
  * });
  *
- * // 链式调用
  * await api.users.getById(123);  // paths: ['users', 'getById'], args: [123]
  *
  * @example
- * // 使用自定义缓存大小
  * const api = createAsyncCaller(callback, 100);
  *
- * @description
- * 该函数创建一个代理对象，具有以下特性：
- * 1. 支持无限级的链式调用
- * 2. 自动收集调用路径
- * 3. 内置LRU缓存机制
- * 4. 共享函数实例以优化性能
+ * @description en
+ * This function creates a proxy object with the following features:
+ * 1. Supports infinite level of chained calls
+ * 2. Automatically collects call paths
+ * 3. Built-in LRU cache mechanism
+ * 4. Shares function instances to optimize performance
  *
- * @throws {TypeError} 如果callback不是函数
+ * @throws {TypeError} - If the callback is not a function
  */
 export function createAsyncCaller(callback, maxCacheSize = MAX_CACHE_SIZE) {
   let proxyCache = callbackProxyCache.get(callback);

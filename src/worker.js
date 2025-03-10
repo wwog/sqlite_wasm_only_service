@@ -37,9 +37,9 @@ async function connect(name) {
       });
       const db = new poolUtil.OpfsSAHPoolDb("common.db");
 
-      // 设置为独占模式，doc: https://sqlite.org/wasm/doc/trunk/persistence.md 4.3
+      // doc: https://sqlite.org/wasm/doc/trunk/persistence.md 4.3
       db.exec("pragma locking_mode=exclusive");
-      // 设置WAL模式.WAL模式下，checkPoint可以尝试在业务低谷期执行
+      // set WAL mode, and checkPoint can be executed at business low periods
       db.exec("pragma journal_mode=WAL");
       workerState[name].db = db;
       workerState[name].poolUtil = poolUtil;
@@ -55,7 +55,7 @@ async function connect(name) {
 async function execute(name, sql) {
   const db = workerState[name].db;
   if (!db) {
-    throw new Error("数据库未连接");
+    throw new Error("not connected");
   }
   const result = db.exec(sql, {
     rowMode: "object",
@@ -69,7 +69,7 @@ async function close(name) {
   const poolUtil = workerState[name].poolUtil;
 
   if (!db) {
-    throw new Error("数据库未连接");
+    throw new Error("not connected");
   }
   workerState[name] = undefined;
   db.exec("PRAGMA wal_checkpoint(TRUNCATE)");
