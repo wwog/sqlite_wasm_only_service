@@ -129,7 +129,7 @@ export class UniqueService {
     }
     this.#isClaiming = true;
     const selfClientId = await cacheGetClientId();
-    const releaser = withResolvers(); // 假设 withResolvers 返回 { promise, resolve, reject }
+    const releaser = withResolvers(); 
     this.#releaser = releaser;
 
     try {
@@ -153,7 +153,6 @@ export class UniqueService {
           break;
         }
 
-        // 锁不可用，发送请求并等待重试
         this.#channel.postMessage({
           type: "claimOwnership",
           targetId: selfClientId,
