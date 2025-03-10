@@ -93,7 +93,7 @@ export class UniqueService {
     } catch (e) {
       console.error(`[UniqueService] Start failed: ${e}`);
       if (this.#releaser) {
-        this.#releaser.resolve(); // 释放锁
+        this.#releaser.resolve();
         this.#releaser = null;
       }
       throw e;
@@ -129,7 +129,7 @@ export class UniqueService {
     }
     this.#isClaiming = true;
     const selfClientId = await cacheGetClientId();
-    const releaser = withResolvers(); 
+    const releaser = withResolvers();
     this.#releaser = releaser;
 
     try {
