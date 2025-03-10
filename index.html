@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <div id="actions">
+      <div class="flex align-center gap-4">
+        Actions
+        <div id="traffic_signal"></div>
+      </div>
+      <div>
+        <button id="startService">StartService</button>
+        <button id="closeService">CloseService</button>
+      </div>
+    </div>
+    <div id="sql_wrapper">
+      <textarea id="sql_editor" rows="4"></textarea>
+      <div class="sql_actions">
+        <select id="sql_select">
+          <option value="c">(C) reate</option>
+          <option value="r">(R) ead</option>
+          <option value="u">(U) pdate</option>
+          <option value="d">(D) elete</option>
+          <option value="i">(I) nput</option>
+        </select>
+        <button id="execute">execute</button>
+      </div>
+
+    </div>
+    <div id="terminal">
+
+    </div>
+
+
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
