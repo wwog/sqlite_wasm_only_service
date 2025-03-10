@@ -92,7 +92,6 @@ export class UniqueService {
       await this.options.onDidStart?.();
     } catch (e) {
       console.error(`[UniqueService] Start failed: ${e}`);
-      this.#ownership = false;
       if (this.#releaser) {
         this.#releaser.resolve(); // 释放锁
         this.#releaser = null;
@@ -105,11 +104,19 @@ export class UniqueService {
     try {
       await this.options.onWillStop?.();
       await this.options.stop();
-      this.#ownership = false;
+      if (this.#releaser) {
+        this.#releaser.resolve();
+        this.#releaser = null;
+      }
       await this.options.onDidStop?.();
     } catch (e) {
       console.error(`[UniqueService] Stop failed: ${e}`);
       throw e;
+    } finally {
+      if (this.#releaser) {
+        this.#releaser.resolve();
+        this.#releaser = null;
+      }
     }
   }
 
@@ -167,21 +174,19 @@ export class UniqueService {
 
     releaser.promise.finally(() => {
       this.#releaser = null;
+      this.#ownership = false;
     });
   };
 
   releaseOwnership = async () => {
     if (this.#releaser) {
-      try {
-        await this.#stop();
-      } catch (e) {
-        console.error(`[UniqueService] Stop failed: ${e}`);
-      } finally {
-        this.#releaser.resolve();
-        this.#releaser = null;
-      }
+      await this.#stop();
       return true;
     }
     return false;
+  };
+
+  hasOwnership = () => {
+    return this.#ownership;
   };
 }

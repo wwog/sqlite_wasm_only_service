@@ -110,7 +110,7 @@ const uniqueService = new UniqueService({
 
 const startServiceElement = document.getElementById("startService");
 const closeServiceElement = document.getElementById("closeService");
-const trafficSignalElemnt = document.getElementById("traffic_signal");
+const trafficSignalElement = document.getElementById("traffic_signal");
 const sqlSelectElement = document.getElementById("sql_select");
 const sqlEditorElement = document.getElementById("sql_editor");
 const executeElement = document.getElementById("execute");
@@ -118,7 +118,9 @@ const executeElement = document.getElementById("execute");
 function renderConnected() {
   startServiceElement.disabled = store.connected;
   closeServiceElement.disabled = !store.connected;
-  trafficSignalElemnt.style.backgroundColor = store.connected ? "green" : "red";
+  trafficSignalElement.style.backgroundColor = store.connected
+    ? "green"
+    : "red";
 }
 
 function renderSql() {
